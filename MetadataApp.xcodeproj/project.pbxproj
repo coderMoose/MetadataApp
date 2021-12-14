@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		650DC618276871D300441825 /* PhotosModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650DC617276871D300441825 /* PhotosModel.swift */; };
 		65EA0F9527684F780039DD2E /* MetadataAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EA0F9427684F780039DD2E /* MetadataAppApp.swift */; };
 		65EA0F9727684F780039DD2E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EA0F9627684F780039DD2E /* ContentView.swift */; };
 		65EA0F9927684F790039DD2E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65EA0F9827684F790039DD2E /* Assets.xcassets */; };
@@ -14,6 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		650DC617276871D300441825 /* PhotosModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosModel.swift; sourceTree = "<group>"; };
 		65EA0F9127684F780039DD2E /* MetadataApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetadataApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65EA0F9427684F780039DD2E /* MetadataAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataAppApp.swift; sourceTree = "<group>"; };
 		65EA0F9627684F780039DD2E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -51,6 +53,7 @@
 		65EA0F9327684F780039DD2E /* MetadataApp */ = {
 			isa = PBXGroup;
 			children = (
+				650DC617276871D300441825 /* PhotosModel.swift */,
 				65EA0F9427684F780039DD2E /* MetadataAppApp.swift */,
 				65EA0F9627684F780039DD2E /* ContentView.swift */,
 				65EA0F9827684F790039DD2E /* Assets.xcassets */,
@@ -139,6 +142,7 @@
 			files = (
 				65EA0F9727684F780039DD2E /* ContentView.swift in Sources */,
 				65EA0F9527684F780039DD2E /* MetadataAppApp.swift in Sources */,
+				650DC618276871D300441825 /* PhotosModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -271,6 +275,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"MetadataApp/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We request access to your photos so that you may view your images' metadata";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -299,6 +304,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"MetadataApp/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We request access to your photos so that you may view your images' metadata";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

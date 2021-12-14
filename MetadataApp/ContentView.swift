@@ -6,10 +6,16 @@
 //
 
 import SwiftUI
+import Photos
 
 struct ContentView: View {
+    @StateObject var photosModel = PhotosModel()
+    
     var body: some View {
         Text("Hello world")
+            .onAppear {
+                photosModel.load()
+            }
     }
 }
 
