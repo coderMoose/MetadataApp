@@ -10,13 +10,28 @@ import Photos
 
 struct PhotoDetailView: View {
     @ObservedObject var photoItem: PhotoItem
+    var namespace: Namespace.ID
+    @Binding var currentScreen: Screen
     
     var body: some View {
         VStack {
-            Image(uiImage: photoItem.image)
+            HStack {
+                Button {
+                    withAnimation {
+                        currentScreen = .main
+                    }
+                } label: {
+                    Image(systemName: "arrow.left")
+                        .imageScale(.large)
+                }
+                Spacer()
+            }
+            Spacer()
+            Image(uiImage: photoItem.thumbnail)
                 .resizable()
-                .aspectRatio(contentMode: .fit)
-                .padding()
+                .aspectRatio(1.0, contentMode: .fit)
+                .matchedGeometryEffect(id: photoItem.id, in: namespace)
+            Spacer()
             DatePicker("Creation Date", selection: $photoItem.creationDate)
                             .datePickerStyle(CompactDatePickerStyle())
                             .padding()
@@ -25,8 +40,8 @@ struct PhotoDetailView: View {
             } label: {
                 Text("Save")
             }
-
         }
+        .padding()
     }
 }
 
@@ -36,6 +51,7 @@ struct PhotoDetailView_Previews: PreviewProvider {
                                              asset: .init(),
                                              thumbnail: UIImage(systemName: "heart")!,
                                              image: UIImage(systemName: "heart")!,
-                                             creationDate: Date()))
+                                             creationDate: Date()),
+                        namespace: Namespace().wrappedValue, currentScreen: .constant(.main))
     }
 }

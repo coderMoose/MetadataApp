@@ -9,9 +9,16 @@ import SwiftUI
 
 @main
 struct MetadataAppApp: App {
+
+    @StateObject var photosModel = PhotosModel()
+
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(photosModel)
+                .onAppear {
+                    photosModel.load()
+                }
         }
     }
 }
