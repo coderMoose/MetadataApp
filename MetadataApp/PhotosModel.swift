@@ -48,20 +48,11 @@ class PhotosModel: ObservableObject {
         return image
     }
     
-    func getMetadata(for asset: PHAsset) -> Date {
-        let changeHandler: () -> Void = {
-          let request = PHAssetChangeRequest(for: asset)
-            request.creationDate = asset.creationDate
-        }
-        
-        PHPhotoLibrary.shared().performChanges(changeHandler, completionHandler: nil)
-        return asset.creationDate ?? Date()
-    }
-    
     static func saveMetadata(photoItem: PhotoItem) {
         let changeHandler: () -> Void = {
             let request = PHAssetChangeRequest(for: photoItem.asset)
             request.creationDate = photoItem.creationDate
+            request.isFavorite = photoItem.isFavorite
         }
         PHPhotoLibrary.shared().performChanges(changeHandler, completionHandler: nil)
     }
@@ -81,12 +72,14 @@ class PhotosModel: ObservableObject {
           let currentAsset = allPhotos[i]
           let thumbnail = getAssetThumbnail(asset: currentAsset)
           let image = getAssetImage(asset: currentAsset)
-          let photoDate = getMetadata(for: currentAsset)
+          let photoDate = currentAsset.creationDate ?? Date()
+          let isFavorite = currentAsset.isFavorite
           let photoItem = PhotoItem(id: UUID(),
                                     asset: currentAsset,
                                     thumbnail: thumbnail,
                                     image: image,
-                                    creationDate: photoDate)
+                                    creationDate: photoDate,
+                                    isFavorite: isFavorite)
           photos.append(photoItem)
       }
       

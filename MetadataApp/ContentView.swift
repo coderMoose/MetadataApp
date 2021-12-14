@@ -14,7 +14,6 @@ enum Screen {
 }
 
 struct ContentView: View {
-
     @EnvironmentObject var photosModel: PhotosModel
     @State private var currentScreen: Screen = .main
     @Namespace private var namespace

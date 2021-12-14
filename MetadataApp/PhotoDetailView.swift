@@ -32,7 +32,13 @@ struct PhotoDetailView: View {
                 .aspectRatio(1.0, contentMode: .fit)
                 .matchedGeometryEffect(id: photoItem.id, in: namespace)
             Spacer()
-            DatePicker("Creation Date", selection: $photoItem.creationDate)
+                Button {
+                    photoItem.isFavorite.toggle()
+                } label: {
+                    Image(systemName: photoItem.isFavorite ? "heart.fill" : "heart")
+                }
+            Spacer()
+            DatePicker("Creation Date:", selection: $photoItem.creationDate)
                             .datePickerStyle(CompactDatePickerStyle())
                             .padding()
             Button {
@@ -51,7 +57,7 @@ struct PhotoDetailView_Previews: PreviewProvider {
                                              asset: .init(),
                                              thumbnail: UIImage(systemName: "heart")!,
                                              image: UIImage(systemName: "heart")!,
-                                             creationDate: Date()),
+                                             creationDate: Date(), isFavorite: true),
                         namespace: Namespace().wrappedValue, currentScreen: .constant(.main))
     }
 }

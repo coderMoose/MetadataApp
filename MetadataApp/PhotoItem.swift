@@ -15,12 +15,14 @@ class PhotoItem: Identifiable, ObservableObject {
     @Published var thumbnail: UIImage
     @Published var image: UIImage
     @Published var creationDate: Date
+    @Published var isFavorite: Bool
     
-    init(id: UUID, asset: PHAsset, thumbnail: UIImage, image: UIImage, creationDate: Date) {
+    init(id: UUID, asset: PHAsset, thumbnail: UIImage, image: UIImage, creationDate: Date, isFavorite: Bool) {
         self.id = id
         self.asset = asset
         self.thumbnail = thumbnail
         self.image = image
         self.creationDate = creationDate
+        self.isFavorite = isFavorite
     }
 }
