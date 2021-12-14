@@ -25,6 +25,16 @@ class PhotosModel: ObservableObject {
             completionHandler(status == .authorized)
         }
     }
+    func getAssetThumbnail(asset: PHAsset) -> UIImage {
+        let manager = PHImageManager.default()
+        let option = PHImageRequestOptions()
+        var thumbnail = UIImage()
+        option.isSynchronous = true
+        manager.requestImage(for: asset, targetSize: CGSize(width: 100, height: 100), contentMode: .aspectFit, options: option, resultHandler: {(result, info)->Void in
+            thumbnail = result!
+        })
+        return thumbnail
+    }
     
     func fetchAssets() {
       let allPhotosOptions = PHFetchOptions()
@@ -35,6 +45,12 @@ class PhotosModel: ObservableObject {
       ]
       
       allPhotos = PHAsset.fetchAssets(with: allPhotosOptions)
+        
+        
+      for i in 0..<allPhotos.count {
+          let asset = getAssetThumbnail(asset: allPhotos[i])
+          photos.append(asset)
+      }
       
       smartAlbums = PHAssetCollection.fetchAssetCollections(
         with: .smartAlbum,

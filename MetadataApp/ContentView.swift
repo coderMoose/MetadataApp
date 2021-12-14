@@ -16,6 +16,9 @@ struct ContentView: View {
             .onAppear {
                 photosModel.load()
             }
+        ForEach(photosModel.photos, id: \.self) { img in
+            Image(uiImage: img)
+        }
     }
 }
 
