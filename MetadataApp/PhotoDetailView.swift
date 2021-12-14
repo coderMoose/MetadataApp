@@ -9,21 +9,33 @@ import SwiftUI
 import Photos
 
 struct PhotoDetailView: View {
-    @StateObject var photosModel = PhotosModel()
-    let photoItem: PhotoItem
+    @ObservedObject var photoItem: PhotoItem
     
     var body: some View {
         VStack {
             Image(uiImage: photoItem.image)
                 .resizable()
-                .frame(width: 400, height: 400)
-            Text("\(photosModel.getMetadata(for: photoItem.asset))")
+                .aspectRatio(contentMode: .fit)
+                .padding()
+            DatePicker("Creation Date", selection: $photoItem.creationDate)
+                            .datePickerStyle(CompactDatePickerStyle())
+                            .padding()
+            Button {
+                PhotosModel.saveMetadata(photoItem: photoItem)
+            } label: {
+                Text("Save")
+            }
+
         }
     }
 }
 
 struct PhotoDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        PhotoDetailView(photoItem: PhotoItem(id: UUID(), asset: .init(), thumbnail: UIImage(systemName: "heart")!, image: UIImage(systemName: "heart")!))
+        PhotoDetailView(photoItem: PhotoItem(id: UUID(),
+                                             asset: .init(),
+                                             thumbnail: UIImage(systemName: "heart")!,
+                                             image: UIImage(systemName: "heart")!,
+                                             creationDate: Date()))
     }
 }

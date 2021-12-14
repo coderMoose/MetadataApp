@@ -9,9 +9,18 @@ import Foundation
 import Photos
 import UIKit
 
-struct PhotoItem: Identifiable {
-    let id: UUID
-    let asset: PHAsset
-    let thumbnail: UIImage
-    let image: UIImage
+class PhotoItem: Identifiable, ObservableObject {
+    @Published var id: UUID
+    @Published var asset: PHAsset
+    @Published var thumbnail: UIImage
+    @Published var image: UIImage
+    @Published var creationDate: Date
+    
+    init(id: UUID, asset: PHAsset, thumbnail: UIImage, image: UIImage, creationDate: Date) {
+        self.id = id
+        self.asset = asset
+        self.thumbnail = thumbnail
+        self.image = image
+        self.creationDate = creationDate
+    }
 }

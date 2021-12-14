@@ -25,6 +25,7 @@ class PhotosModel: ObservableObject {
             completionHandler(status == .authorized)
         }
     }
+    
     func getAssetThumbnail(asset: PHAsset) -> UIImage {
         let manager = PHImageManager.default()
         let option = PHImageRequestOptions()
@@ -57,6 +58,14 @@ class PhotosModel: ObservableObject {
         return asset.creationDate ?? Date()
     }
     
+    static func saveMetadata(photoItem: PhotoItem) {
+        let changeHandler: () -> Void = {
+            let request = PHAssetChangeRequest(for: photoItem.asset)
+            request.creationDate = photoItem.creationDate
+        }
+        PHPhotoLibrary.shared().performChanges(changeHandler, completionHandler: nil)
+    }
+    
     func fetchAssets() {
       let allPhotosOptions = PHFetchOptions()
       allPhotosOptions.sortDescriptors = [
@@ -69,9 +78,15 @@ class PhotosModel: ObservableObject {
         
         
       for i in 0..<allPhotos.count {
-          let thumbnail = getAssetThumbnail(asset: allPhotos[i])
-          let image = getAssetImage(asset: allPhotos[i])
-          let photoItem = PhotoItem(id: UUID(), asset: allPhotos[i], thumbnail: thumbnail, image: image)
+          let currentAsset = allPhotos[i]
+          let thumbnail = getAssetThumbnail(asset: currentAsset)
+          let image = getAssetImage(asset: currentAsset)
+          let photoDate = getMetadata(for: currentAsset)
+          let photoItem = PhotoItem(id: UUID(),
+                                    asset: currentAsset,
+                                    thumbnail: thumbnail,
+                                    image: image,
+                                    creationDate: photoDate)
           photos.append(photoItem)
       }
       
