@@ -13,7 +13,7 @@ class PhotosModel: ObservableObject {
     private var allPhotos = PHFetchResult<PHAsset>()
     private var smartAlbums = PHFetchResult<PHAssetCollection>()
     private var userCollections = PHFetchResult<PHAssetCollection>()
-    @Published var photos: [UIImage] = []
+    @Published var photos: [PhotoItem] = []
     
     func getPermissionIfNecessary(completionHandler: @escaping (Bool) -> Void) {
         guard PHPhotoLibrary.authorizationStatus() != .authorized else {
@@ -36,6 +36,27 @@ class PhotosModel: ObservableObject {
         return thumbnail
     }
     
+    func getAssetImage(asset: PHAsset) -> UIImage {
+        let manager = PHImageManager.default()
+        let option = PHImageRequestOptions()
+        var image = UIImage()
+        option.isSynchronous = true
+        manager.requestImage(for: asset, targetSize: CGSize(width: 400, height: 400), contentMode: .aspectFit, options: option, resultHandler: {(result, info)->Void in
+            image = result!
+        })
+        return image
+    }
+    
+    func getMetadata(for asset: PHAsset) -> Date {
+        let changeHandler: () -> Void = {
+          let request = PHAssetChangeRequest(for: asset)
+            request.creationDate = asset.creationDate
+        }
+        
+        PHPhotoLibrary.shared().performChanges(changeHandler, completionHandler: nil)
+        return asset.creationDate ?? Date()
+    }
+    
     func fetchAssets() {
       let allPhotosOptions = PHFetchOptions()
       allPhotosOptions.sortDescriptors = [
@@ -48,8 +69,10 @@ class PhotosModel: ObservableObject {
         
         
       for i in 0..<allPhotos.count {
-          let asset = getAssetThumbnail(asset: allPhotos[i])
-          photos.append(asset)
+          let thumbnail = getAssetThumbnail(asset: allPhotos[i])
+          let image = getAssetImage(asset: allPhotos[i])
+          let photoItem = PhotoItem(id: UUID(), asset: allPhotos[i], thumbnail: thumbnail, image: image)
+          photos.append(photoItem)
       }
       
       smartAlbums = PHAssetCollection.fetchAssetCollections(

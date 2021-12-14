@@ -12,12 +12,21 @@ struct ContentView: View {
     @StateObject var photosModel = PhotosModel()
     
     var body: some View {
-        Text("Hello world")
-            .onAppear {
-                photosModel.load()
+        NavigationView {
+            ScrollView {
+                ForEach(photosModel.photos) { item in
+                    NavigationLink {
+                        PhotoDetailView(photoItem: item)
+                    } label: {
+                        Image(uiImage: item.thumbnail)
+                            .resizable()
+                            .frame(width: 120, height: 120)
+                    }
+                }
             }
-        ForEach(photosModel.photos, id: \.self) { img in
-            Image(uiImage: img)
+        }
+        .onAppear {
+            photosModel.load()
         }
     }
 }
