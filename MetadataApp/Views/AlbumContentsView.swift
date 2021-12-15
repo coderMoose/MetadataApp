@@ -150,9 +150,11 @@ private struct SelectableImageView: View {
                 .opacity(selectionMode ? 0.9 : 1)
             
             if selectionMode {
-                Image(systemName: item.isSelected ? "checkmark.circle.fill" : "checkmark.circle") // circlebadge
-                    .imageScale(.large)
-                    .foregroundColor(.white)
+                ZStack {
+                    Image(systemName: item.isSelected ? "checkmark.circle.fill" : "circlebadge") 
+                        .animation(.none, value: item.isSelected)
+                        .foregroundColor(.white)
+                }
             }
         }
     }
