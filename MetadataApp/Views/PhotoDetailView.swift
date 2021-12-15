@@ -9,6 +9,7 @@ import SwiftUI
 import Photos
 
 struct PhotoDetailView: View {
+
     @ObservedObject var photoItem: PhotoItem
     var namespace: Namespace.ID
     @Binding var currentScreen: Screen
@@ -18,7 +19,7 @@ struct PhotoDetailView: View {
             HStack {
                 Button {
                     withAnimation {
-                        currentScreen = .main
+                        currentScreen = .albumContents
                     }
                 } label: {
                     Image(systemName: "arrow.left")
@@ -38,8 +39,10 @@ struct PhotoDetailView: View {
                 Image(systemName: photoItem.isFavorite ? "heart.fill" : "heart")
             }
             Button {
-                photoItem.startGeocoding()
-                currentScreen = .map(photoItem)
+                //withAnimation {
+                    photoItem.startGeocoding()
+                    currentScreen = .map(photoItem)
+                //}
             } label: {
                 Image(systemName: "map.circle")
             }
@@ -58,13 +61,13 @@ struct PhotoDetailView: View {
     }
 }
 
-//struct PhotoDetailView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        PhotoDetailView(photoItem: PhotoItem(id: UUID(),
-//                                             asset: .init(),
-//                                             thumbnail: UIImage(systemName: "heart")!,
-//                                             image: UIImage(systemName: "heart")!,
-//                                             creationDate: Date(), isFavorite: true, location: CLLocation()),
-//                        namespace: Namespace().wrappedValue, currentScreen: .constant(.main))
-//    }
-//}
+struct PhotoDetailView_Previews: PreviewProvider {
+    static var previews: some View {
+        PhotoDetailView(photoItem: PhotoItem(id: UUID(),
+                                             asset: .init(),
+                                             thumbnail: UIImage(systemName: "heart")!,
+                                             image: UIImage(systemName: "heart")!,
+                                             creationDate: Date(), isFavorite: true, location: CLLocation()),
+                        namespace: Namespace().wrappedValue, currentScreen: .constant(.detailView(.init(id: .init(), asset: .init(), thumbnail: .init(), image: .init(), creationDate: .init(), isFavorite: true, location: nil))))
+    }
+}

@@ -15,37 +15,11 @@ class PhotosModel: ObservableObject {
     private var userCollections = PHFetchResult<PHAssetCollection>()
     @Published var photos: [PhotoItem] = []
     
-    func getPermissionIfNecessary(completionHandler: @escaping (Bool) -> Void) {
-        guard PHPhotoLibrary.authorizationStatus() != .authorized else {
-            completionHandler(true)
-            return
+    func load() {
+        self.getPermissionIfNecessary { granted in
+            guard granted else { return }
+            self.fetchAssets()
         }
-        
-        PHPhotoLibrary.requestAuthorization { status in
-            completionHandler(status == .authorized)
-        }
-    }
-    
-    func getAssetThumbnail(asset: PHAsset) -> UIImage {
-        let manager = PHImageManager.default()
-        let option = PHImageRequestOptions()
-        var thumbnail = UIImage()
-        option.isSynchronous = true
-        manager.requestImage(for: asset, targetSize: CGSize(width: 100, height: 100), contentMode: .aspectFit, options: option, resultHandler: {(result, info)->Void in
-            thumbnail = result!
-        })
-        return thumbnail
-    }
-    
-    func getAssetImage(asset: PHAsset) -> UIImage {
-        let manager = PHImageManager.default()
-        let option = PHImageRequestOptions()
-        var image = UIImage()
-        option.isSynchronous = true
-        manager.requestImage(for: asset, targetSize: CGSize(width: 400, height: 400), contentMode: .aspectFit, options: option, resultHandler: {(result, info)->Void in
-            image = result!
-        })
-        return image
     }
     
     static func saveMetadata(photoItem: PhotoItem) {
@@ -56,8 +30,41 @@ class PhotosModel: ObservableObject {
         }
         PHPhotoLibrary.shared().performChanges(changeHandler, completionHandler: nil)
     }
+
+    private func getPermissionIfNecessary(completionHandler: @escaping (Bool) -> Void) {
+        guard PHPhotoLibrary.authorizationStatus() != .authorized else {
+            completionHandler(true)
+            return
+        }
+        
+        PHPhotoLibrary.requestAuthorization { status in
+            completionHandler(status == .authorized)
+        }
+    }
     
-    func fetchAssets() {
+    private func getAssetThumbnail(asset: PHAsset) -> UIImage {
+        let manager = PHImageManager.default()
+        let option = PHImageRequestOptions()
+        var thumbnail = UIImage()
+        option.isSynchronous = true
+        manager.requestImage(for: asset, targetSize: CGSize(width: 100, height: 100), contentMode: .aspectFit, options: option, resultHandler: {(result, info)->Void in
+            thumbnail = result!
+        })
+        return thumbnail
+    }
+    
+    private func getAssetImage(asset: PHAsset) -> UIImage {
+        let manager = PHImageManager.default()
+        let option = PHImageRequestOptions()
+        var image = UIImage()
+        option.isSynchronous = true
+        manager.requestImage(for: asset, targetSize: CGSize(width: 400, height: 400), contentMode: .aspectFit, options: option, resultHandler: {(result, info)->Void in
+            image = result!
+        })
+        return image
+    }
+        
+    private func fetchAssets() {
       let allPhotosOptions = PHFetchOptions()
       allPhotosOptions.sortDescriptors = [
         NSSortDescriptor(
@@ -96,10 +103,4 @@ class PhotosModel: ObservableObject {
         options: nil)
     }
     
-    func load() {
-        self.getPermissionIfNecessary { granted in
-            guard granted else { return }
-            self.fetchAssets()
-        }
-    }
 }

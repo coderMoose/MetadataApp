@@ -15,7 +15,9 @@ struct MapView: View {
         VStack {
             HStack {
                 Button {
-                    currentScreen = .detailView(photoItem)
+                    //withAnimation {
+                        currentScreen = .detailView(photoItem)
+                    //}
                 } label: {
                     Image(systemName: "arrow.left")
                         .imageScale(.large)
@@ -34,8 +36,13 @@ struct MapView: View {
     }
 }
 
-//struct MapView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        MapView(photoItem: PhotoItem(id: UUID(), asset: , thumbnail: e, image: T##eUIImage, creationDate: e, isFavorite: e, location: e), currentScreen: .constant(.map))
-//    }
-//}
+struct MapView_Previews: PreviewProvider {
+    
+    static var photoItem: PhotoItem {
+        .init(id: .init(), asset: .init(), thumbnail: .init(), image: .init(), creationDate: Date(), isFavorite: true, location: nil)
+    }
+    
+    static var previews: some View {
+        MapView(photoItem: photoItem, currentScreen: .constant(.map(photoItem)))
+    }
+}
