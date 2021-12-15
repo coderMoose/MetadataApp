@@ -27,6 +27,7 @@ class PhotoItem: Identifiable, ObservableObject {
     @Published var coordinateRegion: MKCoordinateRegion
     @Published var annotationItems: [MyAnnotationItem]
     @Published var locationName = "No location"
+    @Published var isSelected = false
     
     init(id: UUID, asset: PHAsset, thumbnail: UIImage, image: UIImage, creationDate: Date, isFavorite: Bool, location: CLLocation?) {
         self.id = id

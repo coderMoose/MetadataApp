@@ -10,14 +10,15 @@ import MapKit
 struct MapView: View {
     @ObservedObject var photoItem: PhotoItem
     @Binding var currentScreen: Screen
+    var onExit: () -> Void
 
     var body: some View {
         VStack {
             HStack {
                 Button {
-                    //withAnimation {
-                        currentScreen = .detailView(photoItem)
-                    //}
+                    withAnimation {
+                        currentScreen = .detailView([photoItem], onExit)
+                    }
                 } label: {
                     Image(systemName: "arrow.left")
                         .imageScale(.large)
@@ -43,6 +44,6 @@ struct MapView_Previews: PreviewProvider {
     }
     
     static var previews: some View {
-        MapView(photoItem: photoItem, currentScreen: .constant(.map(photoItem)))
+        MapView(photoItem: photoItem, currentScreen: .constant(.map(photoItem, { })), onExit: { })
     }
 }

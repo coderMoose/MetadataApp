@@ -10,64 +10,108 @@ import Photos
 
 struct PhotoDetailView: View {
 
-    @ObservedObject var photoItem: PhotoItem
+    var photoItems: [PhotoItem]
     var namespace: Namespace.ID
     @Binding var currentScreen: Screen
+    var onExit: () -> Void
+    @State private var nextFavoriteValue = false
+    @State private var newCreationDate = Date()
     
     var body: some View {
         VStack {
-            HStack {
-                Button {
-                    withAnimation {
-                        currentScreen = .albumContents
-                    }
-                } label: {
-                    Image(systemName: "arrow.left")
-                        .imageScale(.large)
+            backButton
+            Spacer()
+            ZStack {
+                ForEach(0..<photoItems.count, id: \.self) { i in
+                    Image(uiImage: photoItems[i].thumbnail)
+                        .resizable()
+                        .aspectRatio(1.0, contentMode: .fit)
+                        .matchedGeometryEffect(id: photoItems[i].id, in: namespace)
+                        .offset(x: -CGFloat(20 * i), y: i % 2 == 0 ? -2 : 2)
+                        .shadow(color: .white, radius: 3, x: 1, y: 1)
+                        .frame(maxWidth: 170)
+                        .rotationEffect(Angle.degrees(i % 2 == 0 ? -3 : 3))
                 }
-                Spacer()
             }
             Spacer()
-            Image(uiImage: photoItem.thumbnail)
-                .resizable()
-                .aspectRatio(1.0, contentMode: .fit)
-                .matchedGeometryEffect(id: photoItem.id, in: namespace)
-            Spacer()
             Button {
-                photoItem.isFavorite.toggle()
+                nextFavoriteValue.toggle()
+                for item in photoItems {
+                    item.isFavorite = nextFavoriteValue
+                }
             } label: {
-                Image(systemName: photoItem.isFavorite ? "heart.fill" : "heart")
+                Image(systemName: nextFavoriteValue ? "heart.fill" : "heart")
             }
+            mapButton
+            Spacer()
+            DatePicker("Creation Date:", selection: $newCreationDate)
+                .datePickerStyle(CompactDatePickerStyle())
+                .padding()
+            saveButton
+        }
+        .padding()
+        .onAppear {
+            newCreationDate = photoItems.first!.creationDate
+        }
+    }
+    
+    private var saveButton: some View {
+        Button {
+            for item in photoItems {
+                item.creationDate = newCreationDate
+            }
+            PhotosModel.saveMetadata(photoItems: photoItems)
+        } label: {
+            Text("Save")
+        }
+    }
+    
+    private var backButton: some View {
+        HStack {
             Button {
-                //withAnimation {
-                    photoItem.startGeocoding()
-                    currentScreen = .map(photoItem)
-                //}
+                withAnimation {
+                    onExit()
+                    currentScreen = .albumContents
+                }
+            } label: {
+                Image(systemName: "arrow.left")
+                    .imageScale(.large)
+            }
+            Spacer()
+        }
+    }
+
+    @ViewBuilder
+    private var mapButton: some View {
+        if photoItems.count == 1 {
+            Button {
+                withAnimation {
+                    let firstItem = photoItems.first!
+                    firstItem.startGeocoding()
+                    currentScreen = .map(firstItem, onExit)
+                }
             } label: {
                 Image(systemName: "map.circle")
             }
-        
-            Spacer()
-            DatePicker("Creation Date:", selection: $photoItem.creationDate)
-                .datePickerStyle(CompactDatePickerStyle())
-                .padding()
-            Button {
-                PhotosModel.saveMetadata(photoItem: photoItem)
-            } label: {
-                Text("Save")
-            }
         }
-        .padding()
     }
 }
 
 struct PhotoDetailView_Previews: PreviewProvider {
+    
+    static var photoItem: PhotoItem {
+        PhotoItem(id: UUID(),
+                  asset: .init(),
+                  thumbnail: UIImage(systemName: "heart")!,
+                  image: UIImage(systemName: "heart")!,
+                  creationDate: Date(),
+                  isFavorite: true,
+                  location: CLLocation())
+    }
+    
     static var previews: some View {
-        PhotoDetailView(photoItem: PhotoItem(id: UUID(),
-                                             asset: .init(),
-                                             thumbnail: UIImage(systemName: "heart")!,
-                                             image: UIImage(systemName: "heart")!,
-                                             creationDate: Date(), isFavorite: true, location: CLLocation()),
-                        namespace: Namespace().wrappedValue, currentScreen: .constant(.detailView(.init(id: .init(), asset: .init(), thumbnail: .init(), image: .init(), creationDate: .init(), isFavorite: true, location: nil))))
+        PhotoDetailView(photoItems: [photoItem],
+                        namespace: Namespace().wrappedValue,
+                        currentScreen: .constant(.detailView([photoItem], { })), onExit: { })
     }
 }

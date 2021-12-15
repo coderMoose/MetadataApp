@@ -1,15 +1,1 @@
-Need to add a title to AlbumContentsView at the top
-Need to add a back button to AlbumContentsView
-Multiselect feature
-- Add a selected bool variable to PhotoItem
-- In AlbumContentsView, if selected, show a checkmark overlay
-- Add a "Select" button in the top right corner
-- Tapping Select changes its text to Cancel, and makes a Done button appear beside
-- Tapping Done should load the next screen, and we now pass in an array of images always
-- If we're not in multiselect mode and onTapGesture fires, then just load next screen with an array of one image
-- In PhotoDetailView, use a ZStack + ForEach + offset to get the intended effect
-- Make sure matchGeometryEffect animates n images at once
-- Update Save to modify each of them
-
 User should be able to play videos
-

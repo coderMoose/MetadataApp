@@ -15,6 +15,16 @@ class PhotosModel: ObservableObject {
     private var userCollections = PHFetchResult<PHAssetCollection>()
     @Published var photos: [PhotoItem] = []
     
+    var selectedPhotos: [PhotoItem] {
+        photos.filter { $0.isSelected }
+    }
+    
+    func resetAllToUnselected() {
+        for selectedPhoto in selectedPhotos {
+            selectedPhoto.isSelected = false
+        }
+    }
+    
     func load() {
         self.getPermissionIfNecessary { granted in
             guard granted else { return }
@@ -22,12 +32,16 @@ class PhotosModel: ObservableObject {
         }
     }
     
-    static func saveMetadata(photoItem: PhotoItem) {
+    static func saveMetadata(photoItems: [PhotoItem]) {
+
         let changeHandler: () -> Void = {
-            let request = PHAssetChangeRequest(for: photoItem.asset)
-            request.creationDate = photoItem.creationDate
-            request.isFavorite = photoItem.isFavorite
+            for photoItem in photoItems {
+                let request = PHAssetChangeRequest(for: photoItem.asset)
+                request.creationDate = photoItem.creationDate
+                request.isFavorite = photoItem.isFavorite
+            }
         }
+
         PHPhotoLibrary.shared().performChanges(changeHandler, completionHandler: nil)
     }
 

@@ -12,6 +12,9 @@ struct AlbumContentsView: View {
 
     @EnvironmentObject var photosModel: PhotosModel
     @Binding var currentScreen: Screen
+    @State private var selectionMode = false
+    @State private var imageOpacity = 1.0
+
     var namespace: Namespace.ID
     
     private var columns: [GridItem] {
@@ -23,48 +26,135 @@ struct AlbumContentsView: View {
     }
     
     var body: some View {
-        VStack {
-            ZStack {
-                HStack {
-                    Button {
-                        withAnimation {
-                            currentScreen = .albumPicker
-                        }
-                    } label: {
-                        Image(systemName: "arrow.backward.square.fill")
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                            .foregroundColor(.white)
-                            .padding(.leading)
-                    }
-                    Spacer()
+        GeometryReader { geometry in
+            VStack {
+                ZStack {
+                    backButton
+                    Text("All photos")
+                        .font(.title)
+                        .bold()
+                        .foregroundColor(.white)
+                        .offset(x: selectionMode ? geometry.size.width * -0.15 : 0)
+                        .animation(.spring(), value: selectionMode)
+                    topRightCornerButtons
                 }
-                Text("All photos")
-                    .font(.largeTitle)
-                    .bold()
-                    .foregroundColor(.white)
-            }
-            ScrollView {
-                grid
+                ScrollView {
+                    grid
+                }
             }
         }
     }
+    
+    private var backButton: some View {
+        HStack {
+            Button {
+                withAnimation {
+                    currentScreen = .albumPicker
+                }
+            } label: {
+                Image(systemName: "arrow.backward.square.fill")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                    .foregroundColor(.white)
+                    .padding(.leading)
+            }
+            Spacer()
+        }
+    }
+    
+    private var topRightCornerButtons: some View {
+        HStack {
+            Spacer()
+            Button {
+                if !selectionMode {
+                    // User clicked Select
+                    photosModel.resetAllToUnselected()
+                }
+                selectionMode.toggle()
+            } label: {
+                Text(selectionMode ? "Cancel" : "Select")
+                    .foregroundColor(.white)
+            }
+            if selectionMode {
+                Button {
+                    selectionMode = false
+                    withAnimation {
+                        startFadeOutAnimation()
+                        currentScreen = .detailView(photosModel.selectedPhotos, startFadeInAnimation)
+                    }
+                } label: {
+                    Text("Done")
+                        .bold()
+                        .foregroundColor(.white)
+                }
+            }
+        }.padding(.trailing)
+    }
 
+    func startFadeInAnimation() {
+        withAnimation(.easeIn(duration: 0.7), {
+            imageOpacity = 1.0
+        })
+    }
+    
+    func startFadeOutAnimation() {
+        withAnimation(.easeIn(duration: 0.7), {
+            imageOpacity = 0.0
+        })
+    }
+    
     private var grid: some View {
         LazyVGrid(columns: columns) {
             ForEach(photosModel.photos) { item in
-                Image(uiImage: item.thumbnail)
-                    .resizable()
-                    .aspectRatio(1.0, contentMode: .fit)
-                    .matchedGeometryEffect(id: item.id, in: namespace)
-                    .onTapGesture {
-                        withAnimation {
-                            currentScreen = .detailView(item)
-                        }
-                    }
+                SelectableImageView(item: item,
+                                    selectionMode: $selectionMode,
+                                    currentScreen: $currentScreen,
+                                    namespace: namespace,
+                                    fadeOutAnimation: startFadeOutAnimation,
+                                    onExit: startFadeInAnimation)
+                    .opacity(item.isSelected ? 1.0 : imageOpacity)
             }
         }
         .padding()
+    }
+}
+
+private struct SelectableImageView: View {
+    
+    @ObservedObject var item: PhotoItem
+    @Binding var selectionMode: Bool
+    @Binding var currentScreen: Screen
+    var namespace: Namespace.ID
+    var fadeOutAnimation: () -> Void
+    var onExit: () -> Void
+
+    var body: some View {
+        ZStack(alignment: .bottomTrailing) {
+            Image(uiImage: item.thumbnail)
+                .resizable()
+                .aspectRatio(1.0, contentMode: .fit)
+                .matchedGeometryEffect(id: item.id, in: namespace)
+                .onTapGesture {
+                    if selectionMode {
+                        withAnimation {
+                            item.isSelected.toggle()
+                        }
+                    } else { // tapped a single image
+                        withAnimation {
+                            item.isSelected = true
+                            fadeOutAnimation()
+                            currentScreen = .detailView([item], onExit)
+                        }
+                    }
+                }
+                .opacity(selectionMode ? 0.9 : 1)
+            
+            if selectionMode {
+                Image(systemName: item.isSelected ? "checkmark.circle.fill" : "checkmark.circle") // circlebadge
+                    .imageScale(.large)
+                    .foregroundColor(.white)
+            }
+        }
     }
 }
 

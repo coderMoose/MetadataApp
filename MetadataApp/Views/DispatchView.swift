@@ -11,8 +11,8 @@ enum Screen {
     case dispatchView
     case albumPicker
     case albumContents
-    case detailView(PhotoItem)
-    case map(PhotoItem)
+    case detailView([PhotoItem], () -> Void)
+    case map(PhotoItem, () -> Void)
     
     var isAlbumPicker: Bool {
         if case .albumPicker = self {
@@ -37,13 +37,13 @@ struct DispatchView: View {
                 // the list from scrolling back to the top. This also makes the matchGeometryEffect (with
                 // PhotoDetailView) below look much better.
                 .opacity(currentScreen.isAlbumPicker ? 0.0 : 1.0)
-            if case .detailView(let photoItem) = currentScreen {
-                PhotoDetailView(photoItem: photoItem, namespace: namespace, currentScreen: $currentScreen)
+            if case let .detailView(photoItems, onExit) = currentScreen {
+                PhotoDetailView(photoItems: photoItems, namespace: namespace, currentScreen: $currentScreen, onExit: onExit)
                     .background(Constants.App.backgroundColor)
             }
 
-            if case .map(let photoItem) = currentScreen {
-                MapView(photoItem: photoItem, currentScreen: $currentScreen)
+            if case let .map(photoItem, onExit) = currentScreen {
+                MapView(photoItem: photoItem, currentScreen: $currentScreen, onExit: onExit)
                     .background(Constants.App.backgroundColor)
             }
         }
