@@ -32,15 +32,22 @@ struct PhotoDetailView: View {
                 .aspectRatio(1.0, contentMode: .fit)
                 .matchedGeometryEffect(id: photoItem.id, in: namespace)
             Spacer()
-                Button {
-                    photoItem.isFavorite.toggle()
-                } label: {
-                    Image(systemName: photoItem.isFavorite ? "heart.fill" : "heart")
-                }
+            Button {
+                photoItem.isFavorite.toggle()
+            } label: {
+                Image(systemName: photoItem.isFavorite ? "heart.fill" : "heart")
+            }
+            Button {
+                photoItem.startGeocoding()
+                currentScreen = .map(photoItem)
+            } label: {
+                Image(systemName: "map.circle")
+            }
+        
             Spacer()
             DatePicker("Creation Date:", selection: $photoItem.creationDate)
-                            .datePickerStyle(CompactDatePickerStyle())
-                            .padding()
+                .datePickerStyle(CompactDatePickerStyle())
+                .padding()
             Button {
                 PhotosModel.saveMetadata(photoItem: photoItem)
             } label: {
@@ -51,13 +58,13 @@ struct PhotoDetailView: View {
     }
 }
 
-struct PhotoDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        PhotoDetailView(photoItem: PhotoItem(id: UUID(),
-                                             asset: .init(),
-                                             thumbnail: UIImage(systemName: "heart")!,
-                                             image: UIImage(systemName: "heart")!,
-                                             creationDate: Date(), isFavorite: true),
-                        namespace: Namespace().wrappedValue, currentScreen: .constant(.main))
-    }
-}
+//struct PhotoDetailView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        PhotoDetailView(photoItem: PhotoItem(id: UUID(),
+//                                             asset: .init(),
+//                                             thumbnail: UIImage(systemName: "heart")!,
+//                                             image: UIImage(systemName: "heart")!,
+//                                             creationDate: Date(), isFavorite: true, location: CLLocation()),
+//                        namespace: Namespace().wrappedValue, currentScreen: .constant(.main))
+//    }
+//}

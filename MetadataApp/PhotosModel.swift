@@ -74,12 +74,14 @@ class PhotosModel: ObservableObject {
           let image = getAssetImage(asset: currentAsset)
           let photoDate = currentAsset.creationDate ?? Date()
           let isFavorite = currentAsset.isFavorite
+          let location = currentAsset.location
           let photoItem = PhotoItem(id: UUID(),
                                     asset: currentAsset,
                                     thumbnail: thumbnail,
                                     image: image,
                                     creationDate: photoDate,
-                                    isFavorite: isFavorite)
+                                    isFavorite: isFavorite,
+                                    location: location)
           photos.append(photoItem)
       }
       

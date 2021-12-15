@@ -11,6 +11,7 @@ import Photos
 enum Screen {
     case main
     case detailView(PhotoItem)
+    case map(PhotoItem)
 }
 
 struct ContentView: View {
@@ -25,31 +26,40 @@ struct ContentView: View {
     ]
     
     var body: some View {
-        switch currentScreen {
-        case .main:
+        ZStack {
             mainView
-        case .detailView(let photoItem):
-            PhotoDetailView(photoItem: photoItem, namespace: namespace, currentScreen: $currentScreen)
+            if case .detailView(let photoItem) = currentScreen {
+                PhotoDetailView(photoItem: photoItem, namespace: namespace, currentScreen: $currentScreen)
+                    .background(Color.white)
+            }
+            if case .map(let photoItem) = currentScreen {
+                MapView(photoItem: photoItem, currentScreen: $currentScreen)
+                    .background(Color.white)
+            }
         }
     }
 
     private var mainView: some View {
         ScrollView {
-            LazyVGrid(columns: columns) {
-                ForEach(photosModel.photos) { item in
-                    Image(uiImage: item.thumbnail)
-                        .resizable()
-                        .aspectRatio(1.0, contentMode: .fit)
-                        .matchedGeometryEffect(id: item.id, in: namespace)
-                        .onTapGesture {
-                            withAnimation {
-                                currentScreen = .detailView(item)
-                            }
-                        }
-                }
-            }
-            .padding()
+            grid
         }
+    }
+    
+    private var grid: some View {
+        LazyVGrid(columns: columns) {
+            ForEach(photosModel.photos) { item in
+                Image(uiImage: item.thumbnail)
+                    .resizable()
+                    .aspectRatio(1.0, contentMode: .fit)
+                    .matchedGeometryEffect(id: item.id, in: namespace)
+                    .onTapGesture {
+                        withAnimation {
+                            currentScreen = .detailView(item)
+                        }
+                    }
+            }
+        }
+        .padding()
     }
 }
 
