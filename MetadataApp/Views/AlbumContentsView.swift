@@ -23,8 +23,30 @@ struct AlbumContentsView: View {
     }
     
     var body: some View {
-        ScrollView {
-            grid
+        VStack {
+            ZStack {
+                HStack {
+                    Button {
+                        withAnimation {
+                            currentScreen = .albumPicker
+                        }
+                    } label: {
+                        Image(systemName: "arrow.backward.square.fill")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .foregroundColor(.white)
+                            .padding(.leading)
+                    }
+                    Spacer()
+                }
+                Text("All photos")
+                    .font(.largeTitle)
+                    .bold()
+                    .foregroundColor(.white)
+            }
+            ScrollView {
+                grid
+            }
         }
     }
 
