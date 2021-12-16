@@ -29,8 +29,8 @@ struct PhotoDetailView: View {
                         .scaledToFill()
                         .aspectRatio(1.0, contentMode: .fit)
                         .matchedGeometryEffect(id: photoItems[i].id, in: namespace)
-                        .offset(x: -CGFloat(2 * i), y: i % 2 == 0 ? -2 : 2)
-                        .shadow(color: .black, radius: 3, x: 1, y: 1)
+                        .offset(x: -CGFloat(1 * i), y: i % 2 == 0 ? -2 : 2)
+                        .shadow(color: .black, radius: (i < 4) ? 5 : 0, x: 1, y: 1)
                         .frame(maxWidth: 250)
                         .rotationEffect(photoItems.count > 1 ? Angle.degrees(i % 2 == 0 ? -5 : 5) : Angle.degrees(0))
                 }

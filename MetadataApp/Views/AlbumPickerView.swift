@@ -10,25 +10,51 @@ import SwiftUI
 struct AlbumPickerView: View {
 
     @Binding var currentScreen: Screen
+    @EnvironmentObject var photosModel: PhotosModel
 
     var body: some View {
-        VStack {
+        HStack(alignment: .center) {
             Button {
                 withAnimation {
                     currentScreen = .albumContents
                 }
             } label: {
-                Text("Smart Albums")
+                VStack(alignment: .center) {
+                    album
+                    Text("Smart albums")
+                        .font(.title3)
+                }
             }
+            .padding()
             Button {
                 withAnimation {
                     currentScreen = .albumContents
                 }
             } label: {
-                Text("All Photos")
+                VStack(alignment: .center) {
+                    album
+                    Text("All Photos")
+                        .font(.title3)
+                        .foregroundColor(.white)
+                }
+            }
+            .padding()
+        }
+        //.frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    private var album: some View {
+        ZStack {
+            if let firstImage = photosModel.photos.first {
+                Image(uiImage: firstImage.image)
+                    .resizable()
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .aspectRatio(1.0, contentMode: .fit)
+                    .scaledToFit()
+            } else {
+                Image(systemName: "questionmark")
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 

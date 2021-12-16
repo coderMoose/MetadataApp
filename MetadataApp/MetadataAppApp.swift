@@ -20,6 +20,7 @@ struct MetadataAppApp: App {
                 .onAppear {
                     photosModel.load()
                 }
+                .background(Constants.App.backgroundColor)
         }
     }
 }

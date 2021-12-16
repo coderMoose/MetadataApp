@@ -61,7 +61,7 @@ class PhotosModel: ObservableObject {
         let option = PHImageRequestOptions()
         var thumbnail = UIImage()
         option.isSynchronous = true
-        manager.requestImage(for: asset, targetSize: CGSize(width: 400, height: 400), contentMode: .aspectFit, options: option, resultHandler: {(result, info)->Void in
+        manager.requestImage(for: asset, targetSize: CGSize(width: 150, height: 150), contentMode: .aspectFit, options: option, resultHandler: {(result, info)->Void in
             thumbnail = result!
         })
         return thumbnail
@@ -73,7 +73,7 @@ class PhotosModel: ObservableObject {
         let option = PHImageRequestOptions()
         var image = UIImage()
         option.isSynchronous = true
-        manager.requestImage(for: asset, targetSize: CGSize(width: 1000, height: 1000), contentMode: .aspectFit, options: option, resultHandler: {(result, info)->Void in
+        manager.requestImage(for: asset, targetSize: CGSize(width: 400, height: 400), contentMode: .aspectFit, options: option, resultHandler: {(result, info)->Void in
             image = result!
         })
         return image
