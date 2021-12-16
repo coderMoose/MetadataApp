@@ -13,6 +13,7 @@ struct PhotoDetailView: View {
     var photoItems: [PhotoItem]
     var namespace: Namespace.ID
     @Binding var currentScreen: Screen
+    @EnvironmentObject var photosModel: PhotosModel
     var onExit: () -> Void
     @State private var nextFavoriteValue = false
     @State private var newCreationDate = Date()
@@ -23,14 +24,15 @@ struct PhotoDetailView: View {
             Spacer()
             ZStack {
                 ForEach(0..<photoItems.count, id: \.self) { i in
-                    Image(uiImage: photoItems[i].thumbnail)
+                    Image(uiImage: photoItems[i].image)
                         .resizable()
+                        .scaledToFill()
                         .aspectRatio(1.0, contentMode: .fit)
                         .matchedGeometryEffect(id: photoItems[i].id, in: namespace)
-                        .offset(x: -CGFloat(20 * i), y: i % 2 == 0 ? -2 : 2)
-                        .shadow(color: .white, radius: 3, x: 1, y: 1)
-                        .frame(maxWidth: 170)
-                        .rotationEffect(Angle.degrees(i % 2 == 0 ? -3 : 3))
+                        .offset(x: -CGFloat(2 * i), y: i % 2 == 0 ? -2 : 2)
+                        .shadow(color: .black, radius: 3, x: 1, y: 1)
+                        .frame(maxWidth: 250)
+                        .rotationEffect(photoItems.count > 1 ? Angle.degrees(i % 2 == 0 ? -5 : 5) : Angle.degrees(0))
                 }
             }
             Spacer()
@@ -72,6 +74,7 @@ struct PhotoDetailView: View {
                 withAnimation {
                     onExit()
                     currentScreen = .albumContents
+                    photosModel.resetAllToUnselected()
                 }
             } label: {
                 Image(systemName: "arrow.left")
