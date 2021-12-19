@@ -47,7 +47,10 @@ struct AlbumContentsView: View {
             }
         }
         .sheet(isPresented: $isShowingCamera) {
-            photosModel.addImageToPhotoLibrary(image: imageFromCamera)
+            if let imageFromCamera = imageFromCamera {
+                photosModel.addImageToPhotoLibrary(image: imageFromCamera)
+                print("finished loading")
+            }
         } content: {
             CameraView(cameraImage: $imageFromCamera)
         }

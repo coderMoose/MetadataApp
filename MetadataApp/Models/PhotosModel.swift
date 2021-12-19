@@ -94,24 +94,24 @@ class PhotosModel: NSObject, ObservableObject {
         
         for i in 0..<allPhotos.count {
             let currentAsset = allPhotos[i]
-            let thumbnail = getAssetThumbnail(asset: currentAsset)
-            let image = getAssetImage(asset: currentAsset)
-            let photoDate = currentAsset.creationDate ?? Date()
-            let isFavorite = currentAsset.isFavorite
-            let location = currentAsset.location
-            let photoItem = PhotoItem(id: UUID(),
-                                      asset: currentAsset,
-                                      thumbnail: thumbnail,
-                                      image: image,
-                                      creationDate: photoDate,
-                                      isFavorite: isFavorite,
-                                      location: location)
             let photoIsAlreadyInAlbum = photos.contains(where: { item in
-                item.asset.localIdentifier == photoItem.asset.localIdentifier
+                item.asset.localIdentifier == currentAsset.localIdentifier
             })
             if photoIsAlreadyInAlbum {
-                // Do nothing, it's already in the array
+                continue
             } else {
+                let thumbnail = getAssetThumbnail(asset: currentAsset)
+                let image = getAssetImage(asset: currentAsset)
+                let photoDate = currentAsset.creationDate ?? Date()
+                let isFavorite = currentAsset.isFavorite
+                let location = currentAsset.location
+                let photoItem = PhotoItem(id: UUID(),
+                                          asset: currentAsset,
+                                          thumbnail: thumbnail,
+                                          image: image,
+                                          creationDate: photoDate,
+                                          isFavorite: isFavorite,
+                                          location: location)
                 if insertNewPhotosAtBeginning {
                     photos.insert(photoItem, at: 0)
                 } else {
@@ -131,15 +131,12 @@ class PhotosModel: NSObject, ObservableObject {
             options: nil)
     }
     
-    func addImageToPhotoLibrary(image: UIImage?) {
-        guard let image = image else {
-            return
-        }
+    func addImageToPhotoLibrary(image: UIImage) {
         UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
     }
     
     @objc
-    func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+    private func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
         withAnimation {
             self.load(insertNewPhotosAtBeginning: true)
         }
