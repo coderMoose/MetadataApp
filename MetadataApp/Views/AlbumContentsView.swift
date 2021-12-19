@@ -12,7 +12,7 @@ struct AlbumContentsView: View {
 
     @EnvironmentObject var photosModel: PhotosModel
     @Binding var currentScreen: Screen
-    @State private var selectionMode = false
+    @State private var isInSelectionMode = false
     @State private var imageOpacity = 1.0
     @State private var imageFromCamera: UIImage?
     @State private var isShowingCamera = false
@@ -36,8 +36,8 @@ struct AlbumContentsView: View {
                         .font(.title)
                         .bold()
                         .foregroundColor(.white)
-                        .offset(x: selectionMode ? geometry.size.width * -0.15 : 0)
-                        .animation(.spring(), value: selectionMode)
+                        .offset(x: isInSelectionMode ? geometry.size.width * -0.15 : 0)
+                        .animation(.spring(), value: isInSelectionMode)
                     topRightCornerButtons
                 }
                 ScrollView {
@@ -65,6 +65,7 @@ struct AlbumContentsView: View {
             } label: {
                 cameraButtonImage
             }
+            .disabled(isInSelectionMode)
         }
     }
     
@@ -98,18 +99,24 @@ struct AlbumContentsView: View {
         HStack {
             Spacer()
             Button {
-                if !selectionMode {
+                if !isInSelectionMode {
                     // User clicked Select
                     photosModel.resetAllToUnselected()
                 }
-                selectionMode.toggle()
+                isInSelectionMode.toggle()
             } label: {
-                Text(selectionMode ? "Cancel" : "Select")
+                Text(isInSelectionMode ? "Cancel" : "Select")
                     .foregroundColor(.white)
             }
-            if selectionMode {
+            if isInSelectionMode {
                 Button {
-                    selectionMode = false
+                    if photosModel.selectedPhotos.isEmpty {
+                        withAnimation {
+                            isInSelectionMode = false
+                        }
+                        return
+                    }
+                    isInSelectionMode = false
                     withAnimation {
                         startFadeOutAnimation()
                         currentScreen = .detailView(photosModel.selectedPhotos, startFadeInAnimation)
@@ -139,7 +146,7 @@ struct AlbumContentsView: View {
         LazyVGrid(columns: columns) {
             ForEach(photosModel.photos) { item in
                 SelectableImageView(item: item,
-                                    selectionMode: $selectionMode,
+                                    selectionMode: $isInSelectionMode,
                                     currentScreen: $currentScreen,
                                     namespace: namespace,
                                     fadeOutAnimation: startFadeOutAnimation,

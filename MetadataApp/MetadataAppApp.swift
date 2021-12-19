@@ -11,8 +11,7 @@ import SwiftUI
 struct MetadataAppApp: App {
 
     @StateObject var photosModel = PhotosModel()
-//    @State private var currentScreen: Screen = .albums
-
+    
     var body: some Scene {
         WindowGroup {
             DispatchView()

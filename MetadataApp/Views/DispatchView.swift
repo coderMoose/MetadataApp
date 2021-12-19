@@ -23,7 +23,7 @@ enum Screen {
 }
 
 struct DispatchView: View {
-    @State private var currentScreen: Screen = .albumPicker
+    @State private var currentScreen: Screen = .albumContents
     @Namespace private var namespace
     
     var body: some View {
