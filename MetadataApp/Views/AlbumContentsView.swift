@@ -14,6 +14,8 @@ struct AlbumContentsView: View {
     @Binding var currentScreen: Screen
     @State private var selectionMode = false
     @State private var imageOpacity = 1.0
+    @State private var imageFromCamera: UIImage?
+    @State private var isShowingCamera = false
 
     var namespace: Namespace.ID
     
@@ -41,8 +43,35 @@ struct AlbumContentsView: View {
                 ScrollView {
                     grid
                 }
+                bottomCameraBar
             }
         }
+        .sheet(isPresented: $isShowingCamera) {
+            photosModel.addImageToPhotoLibrary(image: imageFromCamera)
+        } content: {
+            CameraView(cameraImage: $imageFromCamera)
+        }
+
+    }
+    
+    private var bottomCameraBar: some View {
+        HStack {
+            Spacer()
+            Button {
+                isShowingCamera = true
+            } label: {
+                cameraButtonImage
+            }
+        }
+    }
+    
+    private var cameraButtonImage: some View {
+        Image(systemName: "camera")
+            .resizable()
+            .scaledToFit()
+            .aspectRatio(0.1, contentMode: .fit)
+            .foregroundColor(.white)
+            .padding(.trailing)
     }
     
     private var backButton: some View {

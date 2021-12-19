@@ -14,6 +14,7 @@
 		65A5D30C2769944800D3A5A7 /* AlbumPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A5D30B2769944800D3A5A7 /* AlbumPickerView.swift */; };
 		65A5D30E27699BBC00D3A5A7 /* DispatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A5D30D27699BBC00D3A5A7 /* DispatchView.swift */; };
 		65A5D3122769C6F900D3A5A7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A5D3112769C6F900D3A5A7 /* Constants.swift */; };
+		65A5D332276BFECB00D3A5A7 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A5D331276BFECA00D3A5A7 /* CameraView.swift */; };
 		65EA0F9527684F780039DD2E /* MetadataAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EA0F9427684F780039DD2E /* MetadataAppApp.swift */; };
 		65EA0F9727684F780039DD2E /* AlbumContentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EA0F9627684F780039DD2E /* AlbumContentsView.swift */; };
 		65EA0F9927684F790039DD2E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65EA0F9827684F790039DD2E /* Assets.xcassets */; };
@@ -25,10 +26,13 @@
 		650DC61927687F0600441825 /* PhotoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoItem.swift; sourceTree = "<group>"; };
 		650DC61B276880BB00441825 /* PhotoDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailView.swift; sourceTree = "<group>"; };
 		650DC61D27693FE000441825 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		653223BD276F9991001875FF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		65A5D30B2769944800D3A5A7 /* AlbumPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumPickerView.swift; sourceTree = "<group>"; };
 		65A5D30D27699BBC00D3A5A7 /* DispatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchView.swift; sourceTree = "<group>"; };
 		65A5D3112769C6F900D3A5A7 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		65A5D3132769CD0E00D3A5A7 /* TodoList */ = {isa = PBXFileReference; lastKnownFileType = text; path = TodoList; sourceTree = "<group>"; };
+		65A5D331276BFECA00D3A5A7 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		65A5D333276C07C300D3A5A7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		65EA0F9127684F780039DD2E /* MetadataApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetadataApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65EA0F9427684F780039DD2E /* MetadataAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetadataAppApp.swift; sourceTree = "<group>"; };
 		65EA0F9627684F780039DD2E /* AlbumContentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumContentsView.swift; sourceTree = "<group>"; };
@@ -65,6 +69,7 @@
 				65EA0F9627684F780039DD2E /* AlbumContentsView.swift */,
 				650DC61B276880BB00441825 /* PhotoDetailView.swift */,
 				650DC61D27693FE000441825 /* MapView.swift */,
+				65A5D331276BFECA00D3A5A7 /* CameraView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -72,6 +77,7 @@
 		65EA0F8827684F780039DD2E = {
 			isa = PBXGroup;
 			children = (
+				653223BD276F9991001875FF /* README.md */,
 				65EA0F9327684F780039DD2E /* MetadataApp */,
 				65EA0F9227684F780039DD2E /* Products */,
 			);
@@ -88,6 +94,7 @@
 		65EA0F9327684F780039DD2E /* MetadataApp */ = {
 			isa = PBXGroup;
 			children = (
+				65A5D333276C07C300D3A5A7 /* Info.plist */,
 				65A5D3132769CD0E00D3A5A7 /* TodoList */,
 				65EA0F9427684F780039DD2E /* MetadataAppApp.swift */,
 				65A5D3102769AF9400D3A5A7 /* Views */,
@@ -179,6 +186,7 @@
 				65A5D30E27699BBC00D3A5A7 /* DispatchView.swift in Sources */,
 				65EA0F9727684F780039DD2E /* AlbumContentsView.swift in Sources */,
 				65A5D30C2769944800D3A5A7 /* AlbumPickerView.swift in Sources */,
+				65A5D332276BFECB00D3A5A7 /* CameraView.swift in Sources */,
 				650DC61E27693FE000441825 /* MapView.swift in Sources */,
 				65EA0F9527684F780039DD2E /* MetadataAppApp.swift in Sources */,
 				650DC618276871D300441825 /* PhotosModel.swift in Sources */,
@@ -318,6 +326,7 @@
 				DEVELOPMENT_TEAM = S2DX998537;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MetadataApp/Info.plist;
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We request access to your photos so that you may view your images' metadata";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -348,6 +357,7 @@
 				DEVELOPMENT_TEAM = S2DX998537;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MetadataApp/Info.plist;
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We request access to your photos so that you may view your images' metadata";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

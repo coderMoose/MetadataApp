@@ -8,8 +8,9 @@
 import Foundation
 import Photos
 import UIKit
+import SwiftUI
 
-class PhotosModel: ObservableObject {
+class PhotosModel: NSObject, ObservableObject {
     private var allPhotos = PHFetchResult<PHAsset>()
     private var smartAlbums = PHFetchResult<PHAssetCollection>()
     private var userCollections = PHFetchResult<PHAssetCollection>()
@@ -25,10 +26,10 @@ class PhotosModel: ObservableObject {
         }
     }
     
-    func load() {
+    func load(insertNewPhotosAtBeginning: Bool = false) {
         self.getPermissionIfNecessary { granted in
             guard granted else { return }
-            self.fetchAssets()
+            self.fetchAssets(insertNewPhotosAtBeginning: insertNewPhotosAtBeginning)
         }
     }
     
@@ -68,7 +69,6 @@ class PhotosModel: ObservableObject {
     }
     
     private func getAssetImage(asset: PHAsset) -> UIImage {
-//        let screenSize: CGRect = UIScreen.main.bounds
         let manager = PHImageManager.default()
         let option = PHImageRequestOptions()
         var image = UIImage()
@@ -78,44 +78,71 @@ class PhotosModel: ObservableObject {
         })
         return image
     }
-        
-    private func fetchAssets() {
-      let allPhotosOptions = PHFetchOptions()
-      allPhotosOptions.sortDescriptors = [
-        NSSortDescriptor(
-          key: "creationDate",
-          ascending: false)
-      ]
+    
+    private func fetchAllPhotos() {
+        let allPhotosOptions = PHFetchOptions()
+        allPhotosOptions.sortDescriptors = [
+            NSSortDescriptor(key: "creationDate", ascending: false)
+        ]
       
-      allPhotos = PHAsset.fetchAssets(with: allPhotosOptions)
+        allPhotos = PHAsset.fetchAssets(with: allPhotosOptions)
+    }
         
+    private func fetchAssets(insertNewPhotosAtBeginning: Bool = false) {
         
-      for i in 0..<allPhotos.count {
-          let currentAsset = allPhotos[i]
-          let thumbnail = getAssetThumbnail(asset: currentAsset)
-          let image = getAssetImage(asset: currentAsset)
-          let photoDate = currentAsset.creationDate ?? Date()
-          let isFavorite = currentAsset.isFavorite
-          let location = currentAsset.location
-          let photoItem = PhotoItem(id: UUID(),
-                                    asset: currentAsset,
-                                    thumbnail: thumbnail,
-                                    image: image,
-                                    creationDate: photoDate,
-                                    isFavorite: isFavorite,
-                                    location: location)
-          photos.append(photoItem)
-      }
+        fetchAllPhotos()
+        
+        for i in 0..<allPhotos.count {
+            let currentAsset = allPhotos[i]
+            let thumbnail = getAssetThumbnail(asset: currentAsset)
+            let image = getAssetImage(asset: currentAsset)
+            let photoDate = currentAsset.creationDate ?? Date()
+            let isFavorite = currentAsset.isFavorite
+            let location = currentAsset.location
+            let photoItem = PhotoItem(id: UUID(),
+                                      asset: currentAsset,
+                                      thumbnail: thumbnail,
+                                      image: image,
+                                      creationDate: photoDate,
+                                      isFavorite: isFavorite,
+                                      location: location)
+            let photoIsAlreadyInAlbum = photos.contains(where: { item in
+                item.asset.localIdentifier == photoItem.asset.localIdentifier
+            })
+            if photoIsAlreadyInAlbum {
+                // Do nothing, it's already in the array
+            } else {
+                if insertNewPhotosAtBeginning {
+                    photos.insert(photoItem, at: 0)
+                } else {
+                    photos.append(photoItem)
+                }
+            }
+        }
       
-      smartAlbums = PHAssetCollection.fetchAssetCollections(
-        with: .smartAlbum,
-        subtype: .albumRegular,
-        options: nil)
+        smartAlbums = PHAssetCollection.fetchAssetCollections(
+            with: .smartAlbum,
+            subtype: .albumRegular,
+            options: nil)
       
-      userCollections = PHAssetCollection.fetchAssetCollections(
-        with: .album,
-        subtype: .albumRegular,
-        options: nil)
+        userCollections = PHAssetCollection.fetchAssetCollections(
+            with: .album,
+            subtype: .albumRegular,
+            options: nil)
+    }
+    
+    func addImageToPhotoLibrary(image: UIImage?) {
+        guard let image = image else {
+            return
+        }
+        UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+    }
+    
+    @objc
+    func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+        withAnimation {
+            self.load(insertNewPhotosAtBeginning: true)
+        }
     }
     
 }
