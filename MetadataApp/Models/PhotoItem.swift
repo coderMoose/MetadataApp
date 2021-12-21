@@ -10,6 +10,7 @@ import MapKit
 import Photos
 import UIKit
 
+// This class is used by all the photos in the user's photo library
 class PhotoItem: Identifiable, ObservableObject {
     struct MyAnnotationItem: Identifiable {
         var coordinate: CLLocationCoordinate2D
@@ -45,6 +46,7 @@ class PhotoItem: Identifiable, ObservableObject {
         startGeocoding()
     }
     
+    // This helper function finds the location of the selected photo
     func startGeocoding() {
         guard locationName == "No location" else {
             return

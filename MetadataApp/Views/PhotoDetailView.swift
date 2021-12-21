@@ -8,6 +8,7 @@
 import SwiftUI
 import Photos
 
+// This view is called when the user either taps an image or selects multiple images. This view shows the metadata of the image that was selected
 struct PhotoDetailView: View {
 
     var photoItems: [PhotoItem]
@@ -22,6 +23,7 @@ struct PhotoDetailView: View {
         VStack {
             backButton
             Spacer()
+            // Show the images the user selected
             ZStack {
                 ForEach(0..<photoItems.count, id: \.self) { i in
                     Image(uiImage: photoItems[i].image)
@@ -72,6 +74,7 @@ struct PhotoDetailView: View {
         HStack {
             Button {
                 withAnimation {
+                    // If the back button is pressed, switch to AlbumContentsView, which shows the photos in the user's photo library
                     onExit()
                     currentScreen = .albumContents
                     photosModel.resetAllToUnselected()

@@ -7,10 +7,13 @@
 
 import SwiftUI
 
+// Enum of all the different screens we'll need to switch to
 enum Screen {
     case dispatchView
     case albumPicker
     case albumContents
+    
+    // Use enum with associated values to pass values to the views
     case detailView([PhotoItem], () -> Void)
     case map(PhotoItem, () -> Void)
     
@@ -22,6 +25,7 @@ enum Screen {
     }
 }
 
+// This view handles all of the other views by stacking them on each other.
 struct DispatchView: View {
     @State private var currentScreen: Screen = .albumContents
     @Namespace private var namespace

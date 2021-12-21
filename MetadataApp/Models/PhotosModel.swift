@@ -10,22 +10,26 @@ import Photos
 import UIKit
 import SwiftUI
 
+// This class stores all the methods necessary to interact with the user's photo library (e.g. loading photos, saving photos...)
 class PhotosModel: NSObject, ObservableObject {
     private var allPhotos = PHFetchResult<PHAsset>()
     private var smartAlbums = PHFetchResult<PHAssetCollection>()
     private var userCollections = PHFetchResult<PHAssetCollection>()
     @Published var photos: [PhotoItem] = []
     
+    // Computed array that stores the selected photos
     var selectedPhotos: [PhotoItem] {
         photos.filter { $0.isSelected }
     }
     
+    // Resets the selected photos
     func resetAllToUnselected() {
         for selectedPhoto in selectedPhotos {
             selectedPhoto.isSelected = false
         }
     }
     
+    // Loads all of the user's photos
     func load(insertNewPhotosAtBeginning: Bool = false) {
         self.getPermissionIfNecessary { granted in
             guard granted else { return }
@@ -33,6 +37,7 @@ class PhotosModel: NSObject, ObservableObject {
         }
     }
     
+    // Saves the metadata of a selected photo
     static func saveMetadata(photoItems: [PhotoItem]) {
 
         let changeHandler: () -> Void = {
@@ -79,6 +84,7 @@ class PhotosModel: NSObject, ObservableObject {
         return image
     }
     
+    // Get all of the photos from the user's photo library
     private func fetchAllPhotos() {
         let allPhotosOptions = PHFetchOptions()
         allPhotosOptions.sortDescriptors = [
@@ -87,7 +93,8 @@ class PhotosModel: NSObject, ObservableObject {
       
         allPhotos = PHAsset.fetchAssets(with: allPhotosOptions)
     }
-        
+    
+    // Get all of the assets from the user's photo library
     private func fetchAssets(insertNewPhotosAtBeginning: Bool = false) {
         
         fetchAllPhotos()
@@ -119,7 +126,6 @@ class PhotosModel: NSObject, ObservableObject {
                 }
             }
         }
-      
         smartAlbums = PHAssetCollection.fetchAssetCollections(
             with: .smartAlbum,
             subtype: .albumRegular,
@@ -141,5 +147,4 @@ class PhotosModel: NSObject, ObservableObject {
             self.load(insertNewPhotosAtBeginning: true)
         }
     }
-    
 }

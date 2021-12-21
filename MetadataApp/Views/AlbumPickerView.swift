@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// This view is the root view. It allows you to open AlbumContentsView, which shows all photos.
 struct AlbumPickerView: View {
 
     @Binding var currentScreen: Screen
@@ -40,11 +41,11 @@ struct AlbumPickerView: View {
             }
             .padding()
         }
-        //.frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
     private var album: some View {
         ZStack {
+            // Getting the cover image
             if let firstImage = photosModel.photos.first {
                 Image(uiImage: firstImage.image)
                     .resizable()

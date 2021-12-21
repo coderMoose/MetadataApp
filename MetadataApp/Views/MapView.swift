@@ -16,6 +16,7 @@ struct MapView: View {
         VStack {
             HStack {
                 Button {
+                    // If the back button is pressed, then switch to the DetailView, which contains the metadata of the selected photo
                     withAnimation {
                         currentScreen = .detailView([photoItem], onExit)
                     }
@@ -26,6 +27,7 @@ struct MapView: View {
                 Spacer()
             }
             Text(photoItem.locationName)
+            // Get the location of the selected photo
             if photoItem.hasLocation {
                 Map(coordinateRegion: $photoItem.coordinateRegion,
                     annotationItems: photoItem.annotationItems) { item in

@@ -8,6 +8,7 @@
 import Photos
 import SwiftUI
 
+// This view shows all the photos in the user's photo library
 struct AlbumContentsView: View {
 
     @EnvironmentObject var photosModel: PhotosModel
@@ -19,6 +20,7 @@ struct AlbumContentsView: View {
 
     var namespace: Namespace.ID
     
+    // Restrict the grid to three columns
     private var columns: [GridItem] {
         [
             GridItem(.adaptive(minimum: 80, maximum: 180)),
@@ -36,7 +38,11 @@ struct AlbumContentsView: View {
                         .font(.title)
                         .bold()
                         .foregroundColor(.white)
+                    
+                        // This is why we need a geometry reader. It gives the "All photos" title a slide animation relative to the screen's width
                         .offset(x: isInSelectionMode ? geometry.size.width * -0.15 : 0)
+                    
+                        // Gives our slide a nice animation
                         .animation(.spring(), value: isInSelectionMode)
                     topRightCornerButtons
                 }
@@ -46,10 +52,11 @@ struct AlbumContentsView: View {
                 bottomCameraBar
             }
         }
+        // This sheet brings up the CameraView, which is used to take a photo
         .sheet(isPresented: $isShowingCamera) {
             if let imageFromCamera = imageFromCamera {
+                // Adds the picture that the user took to the user's photo library
                 photosModel.addImageToPhotoLibrary(image: imageFromCamera)
-                print("finished loading")
             }
         } content: {
             CameraView(cameraImage: $imageFromCamera)
@@ -58,6 +65,7 @@ struct AlbumContentsView: View {
     }
     
     private var bottomCameraBar: some View {
+        // Camera button
         HStack {
             Spacer()
             Button {
@@ -79,6 +87,7 @@ struct AlbumContentsView: View {
     }
     
     private var backButton: some View {
+        // Back button that takes us to the album picker view
         HStack {
             Button {
                 withAnimation {
@@ -110,14 +119,18 @@ struct AlbumContentsView: View {
             }
             if isInSelectionMode {
                 Button {
+                    // Done acts as a cancel button when the user hasn't selected any photos
                     if photosModel.selectedPhotos.isEmpty {
                         withAnimation {
                             isInSelectionMode = false
                         }
                         return
                     }
+                    
+                    // If the user did select a photo, switch the screen to DetailView, which lets the users edit their photos' metadata
                     isInSelectionMode = false
                     withAnimation {
+                        // Fade out animation to make it look nice
                         startFadeOutAnimation()
                         currentScreen = .detailView(photosModel.selectedPhotos, startFadeInAnimation)
                     }
@@ -129,19 +142,22 @@ struct AlbumContentsView: View {
             }
         }.padding(.trailing)
     }
-
+    
+    // This animation is called when the user clicks the back button in DetailView
     func startFadeInAnimation() {
         withAnimation(.easeIn(duration: 0.7), {
             imageOpacity = 1.0
         })
     }
     
+    // This animation is called when the user clicks done after selecting some photos
     func startFadeOutAnimation() {
         withAnimation(.easeIn(duration: 0.7), {
             imageOpacity = 0.0
         })
     }
     
+    // The user's photo library
     private var grid: some View {
         LazyVGrid(columns: columns) {
             ForEach(photosModel.photos) { item in
@@ -174,7 +190,7 @@ private struct SelectableImageView: View {
                 .aspectRatio(1.0, contentMode: .fit)
                 .matchedGeometryEffect(id: item.id, in: namespace)
                 .onTapGesture {
-                    if selectionMode {
+                    if selectionMode { // selected an image
                         withAnimation {
                             item.isSelected.toggle()
                         }
