@@ -38,20 +38,31 @@ struct PhotoDetailView: View {
                 }
             }
             Spacer()
-            Button {
-                nextFavoriteValue.toggle()
-                for item in photoItems {
-                    item.isFavorite = nextFavoriteValue
+            HStack {
+                Button {
+                    nextFavoriteValue.toggle()
+                    for item in photoItems {
+                        item.isFavorite = nextFavoriteValue
+                    }
+                } label: {
+                    Image(systemName: nextFavoriteValue ? "heart.fill" : "heart")
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                        .padding()
                 }
-            } label: {
-                Image(systemName: nextFavoriteValue ? "heart.fill" : "heart")
+                Spacer()
+                mapButton
             }
-            mapButton
+            
             Spacer()
             DatePicker("Creation Date:", selection: $newCreationDate)
                 .datePickerStyle(CompactDatePickerStyle())
+                .colorMultiply(.white)
+                .environment(\.colorScheme, .dark)
+                .foregroundColor(.white)
                 .padding()
             saveButton
+            Spacer()
         }
         .padding()
         .onAppear {
@@ -67,6 +78,10 @@ struct PhotoDetailView: View {
             PhotosModel.saveMetadata(photoItems: photoItems)
         } label: {
             Text("Save")
+                .padding()
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(15)
         }
     }
     
@@ -98,6 +113,9 @@ struct PhotoDetailView: View {
                 }
             } label: {
                 Image(systemName: "map.circle")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                    .padding()
             }
         }
     }
