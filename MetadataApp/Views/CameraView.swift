@@ -10,7 +10,7 @@ import SwiftUI
 
 struct CameraView: UIViewControllerRepresentable {
     
-    private class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+    class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
         var picker: CameraView
         
         init(picker: CameraView) {
