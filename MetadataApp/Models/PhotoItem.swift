@@ -41,7 +41,7 @@ class PhotoItem: Identifiable, ObservableObject {
 
         let location = location ?? CLLocation()
         self.location = location
-        self.coordinateRegion = MKCoordinateRegion(center: location.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
+        self.coordinateRegion = MKCoordinateRegion(center: location.coordinate, span: MKCoordinateSpan(latitudeDelta: 50, longitudeDelta: 50))
         self.annotationItems = [MyAnnotationItem(coordinate: location.coordinate)]
         startGeocoding()
     }
@@ -60,7 +60,7 @@ class PhotoItem: Identifiable, ObservableObject {
                 return
             }
             DispatchQueue.main.async { [self] in
-                locationName = placemark.locality ?? "No location"
+                locationName = placemark.country ?? "No location"
             }
         }
     }
