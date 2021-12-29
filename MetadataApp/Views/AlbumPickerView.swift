@@ -14,32 +14,21 @@ struct AlbumPickerView: View {
     @EnvironmentObject var photosModel: PhotosModel
 
     var body: some View {
-        HStack(alignment: .center) {
-            Button {
-                withAnimation {
-                    currentScreen = .albumContents
-                }
-            } label: {
-                VStack(alignment: .center) {
-                    album
-                    Text("Smart albums")
-                        .font(.title3)
-                }
+        VStack {
+        Button {
+            withAnimation {
+                currentScreen = .albumContents
             }
-            .padding()
-            Button {
-                withAnimation {
-                    currentScreen = .albumContents
-                }
-            } label: {
-                VStack(alignment: .center) {
-                    album
-                    Text("All Photos")
-                        .font(.title3)
-                        .foregroundColor(.white)
-                }
+        } label: {
+            VStack {
+                album
+                Text("All photos")
+                    .font(.title)
+                    .foregroundColor(.white)
             }
-            .padding()
+        }
+        .padding()
+        Spacer()
         }
     }
     
@@ -50,7 +39,6 @@ struct AlbumPickerView: View {
                 Image(uiImage: firstImage.image)
                     .resizable()
                     .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .aspectRatio(1.0, contentMode: .fit)
                     .scaledToFit()
             } else {
                 Image(systemName: "questionmark")
