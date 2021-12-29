@@ -27,6 +27,7 @@ struct MapView: View {
                 Spacer()
             }
             Text(photoItem.locationName)
+                .foregroundColor(.white)
             // Get the location of the selected photo
             if photoItem.hasLocation {
                 Map(coordinateRegion: $photoItem.coordinateRegion,
