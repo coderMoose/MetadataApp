@@ -10,6 +10,20 @@ import SwiftUI
 
 struct CameraView: UIViewControllerRepresentable {
     
+    private class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+        var picker: CameraView
+        
+        init(picker: CameraView) {
+            self.picker = picker
+        }
+        
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            guard let selectedImage = info[.originalImage] as? UIImage else { return }
+            self.picker.cameraImage = selectedImage
+            self.picker.isPresented.wrappedValue.dismiss()
+        }
+    }
+    
     @Binding var cameraImage: UIImage?
     @Environment(\.presentationMode) var isPresented
         
@@ -27,20 +41,6 @@ struct CameraView: UIViewControllerRepresentable {
     // Connecting the Coordinator class with this struct
     func makeCoordinator() -> Coordinator {
         Coordinator(picker: self)
-    }
-}
-
-class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
-    var picker: CameraView
-    
-    init(picker: CameraView) {
-        self.picker = picker
-    }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        guard let selectedImage = info[.originalImage] as? UIImage else { return }
-        self.picker.cameraImage = selectedImage
-        self.picker.isPresented.wrappedValue.dismiss()
     }
 }
 

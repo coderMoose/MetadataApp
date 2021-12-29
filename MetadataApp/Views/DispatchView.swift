@@ -27,7 +27,7 @@ enum Screen {
 
 // This view handles all of the other views by stacking them on each other.
 struct DispatchView: View {
-    @State private var currentScreen: Screen = .albumContents
+    @State private var currentScreen: Screen = .albumPicker
     @Namespace private var namespace
     
     var body: some View {
