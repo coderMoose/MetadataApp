@@ -94,6 +94,13 @@ The animation/transition from AlbumContentsView to this screen is handled by Swi
 - Shows a map with a pin so a user can see where a photo was taken
 - Cool animation when they select a photo and move to a new screen, and when they come back
 
+# Design Decisions
+The app loads all photos from the photo library immediately after it is launched. This allows the app to run fast once the photos have finished loading (for example, while the user is scrolling their photos). But, it makes the app take longer to launch. The user sees a delay of a few seconds.
+
+I thought about having this happen after the app is launched, but decided the user shouldn't have to click an extra button to load. In the future, I'd like to extend this app to only load the photos it needs one screen at a time - that should make the launch much faster.
+
+The other major design decision I had to think through was how to pass data between all the various screens. I ended up creating a first view called "Dispatch" view that is kind of like a ViewController from the old way of building iOS apps in UIKit (before SwiftUI came out). It uses an enum and Swift's feature called associated values to control what the current screen is. One thing that was a bit tricky on this screen was I had to use a ZStack to ensure that the first two screens are still shown on the screen even if they're underneath. This is because SwiftUI's "matchedGeometryEffect" animation needs the previous view to still be on the screen when navigating backwards.
+
 # Things I learned
 - SwiftUI
 - Git

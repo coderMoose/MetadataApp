@@ -74,6 +74,7 @@ struct PhotoDetailView: View {
         Button {
             for item in photoItems {
                 item.creationDate = newCreationDate
+                item.isFavorite = nextFavoriteValue
             }
             PhotosModel.saveMetadata(photoItems: photoItems)
         } label: {
