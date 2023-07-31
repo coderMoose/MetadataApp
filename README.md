@@ -1,6 +1,6 @@
 # Metadata App
 ### Disclaimer: this was made as my final project for Harvard's CS50X course.
-#### Video: 
+
 #### Description: This app lets users edit the metadata of their photos. 
 
 For example, let's say a user has a box of old photos sitting in their attic. They start sorting them, and use their camera to take a picture to store it digitally on their phone. This is great in that they now have an online backup of it, but iOS will store the photo's "date" as today. But imagine this is a memory from Christmas 2004. Now when scrolling through photos, their photos will be out of order.
