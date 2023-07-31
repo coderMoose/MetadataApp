@@ -1,4 +1,5 @@
 # Metadata App
+### Disclaimer: this was made as my final project for Harvard's CS50X course.
 #### Video: 
 #### Description: This app lets users edit the metadata of their photos. 
 
